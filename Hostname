@@ -1,1 +1,17 @@
-# This is a test file
+#hostnamectl status
+#hostnamectl
+#hostname
+
+#sudo hostnamectl set-hostname myserver.example.com
+#sudo hostnamectl set-hostname "Web Server 01" --pretty
+
+#vi /etc/hostname
+#vi /etc/hosts
+#vi /etc/sysconfig/network
+#Entries Like : 
+#127.0.0.1   myserver.example.com myserver
+#HOSTNAME=myserver.example.com
+#myserver.example.com
+
+#sudo systemctl restart systemd-logind
+
