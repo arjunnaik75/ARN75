@@ -1,13 +1,13 @@
 #How to check hostname / RHEL Server Name
 #hostnamectl status
 #hostnamectl
-#hostname
+hostname
 
 #How to set hostname / RHEL Server Name Simple
 #sudo hostnamectl set-hostname rhel.lab.local
-#sudo hostnamectl set-hostname myserver.example.com
+sudo hostnamectl set-hostname myserver.example.com
 
-#sudo hostnamectl set-hostname "Web Server 01" --pretty
+sudo hostnamectl set-hostname "Web Server 01" --pretty
 
 #vi /etc/hostname
 #vi /etc/hosts
