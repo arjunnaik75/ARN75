@@ -15,19 +15,21 @@ semanage fcontext -a -t httpd_sys_content_t '/wpages(/.*)?'
 #semanage fcontext -a -t httpd_sys_rw_content_t "/wpages/site02(/.*)?" 
 restorecon -Rv /wpages
 
-# Optional Config Files for Tesing in the Local Host Machine /etc/httpd/conf/httpd.conf and /etc/httpd/conf.d/mysites.conf
+# Optional Config Files for Tesing on the Local Host Machine /etc/httpd/conf/httpd.conf and /etc/httpd/conf.d/mysites.conf
 # Repositories Config Files /etc/yum.repo.d/redhat.repo and /etc/containers/registries.conf
+ls -ltrdZ /home/anaik/wpages/
+ls -ltrdZ /home/anaik/wpages/site01
 dnf install podman -y
 podman login registry.redhat.io
 podman search httpd
 grep anaik /etc/subuid
 grep anaik /etc/subgid
 sudo sh -c 'echo "anaik:100000:65536" >> /etc/subuid‘
-sudo sh -c 'echo "anaik:100000:65536" >> /etc/subgid
+sudo sh -c 'echo "anaik:100000:65536" >> /etc/subgid'
+sudo loginctl enable-linger anaik
 podman system migrate
 
-#Setup for 1st Container (httpd with custom webpage)
-#Copy the web contents into /home/anaik/wpages/site01
+#Setup for 1st Container (httpd with custom webpage) #Copy the web contents into /home/anaik/wpages/site01
 dnf install policycoreutils-python-utils
 semanage port -l
 semanage port -a -t http_port_t -p tcp 8282
@@ -39,7 +41,7 @@ firewall-cmd --add-service=http --permanent
 firewall-cmd –-add-port=8282/tcp –-permanent
 firewall-cmd --reload
 
-sudo loginctl enable-linger anaik  
+podman login registry.redhat.io --get-login
 podman search httpd
 skopeo inspect docker://registry.redhat.io/rhel9/httpd-24
 podman pull registry.redhat.io/rhel9/httpd-24
@@ -47,8 +49,11 @@ podman images
 podman run -dt --name http -p 8282:8080 -v /home/anaik/wpages/site01:/var/www/html:Z registry.redhat.io/rhel9/httpd-24
 podman ps
 podman ps -a
+
 mkdir -p ~/.config/systemd/user
 sudo chown -R anaik:anaik ~/.config/systemd/user
+#ls -ltrdZ /home/anaik/.config/systemd/user
+#chmod 775  ~/.config/systemd/user
 ls -ld ~/.config/systemd/user
 systemctl --user daemon-reload
 systemctl --user enable --now podman.socket
@@ -68,6 +73,8 @@ curl http://rhel.lab.local:8282/blackhole.html
 
 #Setup for 2nd Container (nginx with custom webpage)
 #Copy the web contents into /home/anaik/wpages/site02
+ls -ltrdZ /home/anaik/wpages/
+ls -ltrdZ /home/anaik/wpages/site02
 semanage port -l
 semanage port -a -t http_port_t -p tcp 8383
 firewall-cmd --list-all
@@ -97,24 +104,31 @@ podman ps
 
 # ################################################ #
 # 2 Containers are now serving 2 different Websites using a single Host_Server
+podman login registry.redhat.io --get-login
+podman login registry.access.redhat.com --get-login
+podman logout registry.access.redhat.com
+podman logout registry.redhat.io
 
 # ################################################ #
 # Troubleshooting Steps #
 apachectl configtest
 podman ps
 podman ps -a
-#sudo ss -ltnp | grep 8282
-#sudo netstat -tulpn | grep 8282
+#sudo ss -ltnp | grep -E '8282|8383'
+#sudo netstat -tulpn | grep -E '8282|8383'
 #journalctl --user -u container-nginx.service
 #journalctl --user -u container-http.service
 #podman-remote --url unix:///run/user/$UID/podman/podman.sock info
 #podman exec -it httpd ls /var/www/html
-#systemctl --user stop container-httpd.service
-#systemctl --user restart container-httpd.service
+#podman exec -it nginx ls /usr/share/nginx/html
 #nginx volume mapping: /var/www/html:Z for RHEL Images,  usr/share/nginx/html:Z for Docker Images.
 #systemctl --user daemon-reload
+#systemctl --user stop container-httpd.service
+#systemctl --user restart container-httpd.service
+#systemctl --user stop container-nginx.service
+#systemctl --user restart container-nginx.service
 #systemctl --user status container-nginx.service
-#systemctl --user status container-http.service
+#systemctl --user status container-httpd.service
 #podman inspect nginx | grep User
 #podman exec -it --user 1000 nginx bash
 #podman inspect httpd | grep User
@@ -132,11 +146,11 @@ ss -tlnp | grep httpd
 #rm -f ~/.config/systemd/user/podman.socket
 #rm -f ~/.config/systemd/user/podman.service
 
-#podman stop <container_ID>
+
 #systemctl --user disable --now container-nginx.service
-#podman rm -f nginx
 #systemctl --user disable --now container-httpd.service
-#podman rm -f httpd
+#podman stop <container>
+#podman rm -f <container>
 
 cat /etc/httpd/conf/httpd.conf
 cat /etc/httpd/conf.d/mysites.conf
