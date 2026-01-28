@@ -1,7 +1,5 @@
 # To Host Multiple Websites with Podman Containers using a single Host_Server
 # Website_01 using httpd over 8282:8080 and Website_02 over 8383:80 using nginx
-# Let's begin.....
-
 # Setup a Host_Machine (In my case : RHEL8.9, rhel.lab.local, 192.168.1.10/24, anaik <root is root>)
 
 # Create the directory and place the Web_Contents for the user 
