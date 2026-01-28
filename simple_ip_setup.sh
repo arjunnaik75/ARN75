@@ -1,6 +1,5 @@
 # Find the interface like enp2s0
-nmcli | egrep 'eth|en'
-nmcli | grep interface
+nmcli | egrep 'eth|en|interface'
 
 # Modify connection with static IP
 nmcli con mod enp2s0 ipv4.addresses 192.168.1.100/24
