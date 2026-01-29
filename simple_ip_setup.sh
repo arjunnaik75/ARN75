@@ -4,7 +4,8 @@ nmcli | egrep 'eth|en|interface'
 # Modify connection with static IP
 nmcli con mod enp2s0 ipv4.addresses 192.168.1.100/24
 nmcli con mod enp2s0 ipv4.gateway 192.168.1.1
-nmcli con mod enp2s0 ipv4.dns "192.168.1.1 8.8.8.8 8.8.4.4 1.1.1.1"
+nmcli con mod enp2s0 ipv4.dns 192.168.1.1
+#nmcli con mod enp2s0 ipv4.dns "192.168.1.1 8.8.8.8 8.8.4.4 1.1.1.1"
 nmcli con mod enp2s0 ipv4.method manual
 nmcli con mod ens160 connection.autoconnect yes
 
