@@ -11,7 +11,7 @@ for user in $(awk -F: '($3 >= 1000) {print $1}' /etc/passwd | egrep -v '^(admin|
     sudo userdel -r "$user"
 done
 
-# This will cleanup all groups having GID >= 1000 except admingroup & arjun as excluded below:
-for group in $(awk -F: '($3 >= 1000) {print $1}' /etc/group | egrep -v '^(admingroup|arjun)$'); do
+# This will cleanup all groups having GID >= 1000 except admin, admingroup & arjun as excluded below:
+for group in $(awk -F: '($3 >= 1000) {print $1}' /etc/group | egrep -v '^(admin|admingroup|arjun)$'); do
     sudo groupdel "$group"
 done
