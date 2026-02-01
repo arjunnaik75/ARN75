@@ -1,0 +1,51 @@
+# Find Files Less than 10MB in Size
+mkdir -p /findings
+find /mydir -type f -size -10M -exec cp {} /findings/ \;
+# OR
+find /mydir -type f -size -10M -exec cp -t /findings/ {} +
+
+# Find Files More than 10MB in Size
+find /mydir -type f -size +10M -exec cp {} /findings/ \;
+# OR
+find /mydir -type f -size +10M -exec cp -t /findings/ {} +
+
+# Find Files More than 10MB & Less than 50MB in Size
+find /mydir -type f -size +10M -size -10M -exec cp {} /findings/ \;
+# OR
+find /mydir -type f -size +10M -size -10M -exec cp -t /findings/ {} +
+
+# By Name
+find /mydir -type f -name "test.txt" -exec cp {} /findings/ \;
+find /mydir -type f -name "test.txt" -exec cp -t /findings/ {} +
+
+# Search for files ending with digits, print and append
+find /mydir -type f -regex '.*[0-9]$' | tee -a /findings/digit_file1 # File Paths
+find /mydir -type f -regex '.*/[0-9]$' | tee -a /findings/digit_file1 # Only File Names
+
+# Find multiple patterns
+find /etc -type f \( -name "*.conf" -o -name "*.cfg" -o -name "*.service" \) >> /findings/conf_list.txt
+# Append and also show on screen
+find /etc -type f \( -name "*.conf" -o -name "*.cfg" -o -name "*.service" \) | tee -a /findings/conf_list.txt
+find /etc -type f '(' -name "*.conf" -o -name "*.cfg" -o -name "*.service" ')' | tee -a /findings/conf_list.txt
+
+
+# Find and Delete Files
+find /mydir -type f -name "*.bak" -exec rm -f {} \;
+find /mydir -type f -name "*.bak" -exec rm -f {} +
+
+
+# Directory
+du -h --max-depth=1 /mydir | awk '$1 ~ /M/ && $1+0 > 100 {print $2}'
+du -h --max-depth=3 /mydir | awk '$1 ~ /M/ && $1+0 > 100 {print $2}'
+
+# Copying Directories Recursively
+for dir in $(sudo du -sm /mydir/* | awk '$1 > 100 {print $2}'); do
+    sudo cp -r "$dir" /findings/large_dirs/
+done
+
+# Preserves permissions, symlinks, etc
+for dir in $(sudo du -sm /mydir/* | awk '$1 > 100 {print $2}'); do
+    sudo rsync -a "$dir" /findings/large_dirs/
+done
+
+
