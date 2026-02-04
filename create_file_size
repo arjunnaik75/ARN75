@@ -1,25 +1,17 @@
-# Method 1: dd (classic, portable)
-# Create a 10 MB file filled with zeros
+# Method 1: dd (classic, portable) # Create a 10 MB file filled with zeros # Create a 2 GB file filled with zeros
 dd if=/dev/zero of=bigfile_10MB bs=1M count=10
-# Create a 2 GB file filled with zeros
 dd if=/dev/zero of=bigfile_2GB bs=1G count=2
 
-# Method 2: fallocate (fast, modern)
-# 10 MB file
+# Method 2: fallocate (fast, modern) # 10 MB file # 2 GB file
 fallocate -l 10M bigfile_10MB
-# 2 GB file
 fallocate -l 2G bigfile_2GB
 
-# Method 3: truncate (sparse file)
-# 10 MB file
+# Method 3: truncate (sparse file) # 10 MB file # 2 GB file
 truncate -s 10M bigfile_10MB
-# 2 GB file
 truncate -s 2G bigfile_2GB
 
-# Method 4: Random data with dd (for realistic content)
-# 10 MB file with random data
+# Method 4: Random data with dd (for realistic content) # 10 MB file with random data # 2 GB file with random data
 dd if=/dev/urandom of=bigfile_10MB bs=1M count=10
-# 2 GB file with random data
 dd if=/dev/urandom of=bigfile_2GB bs=1M count=2048
 
 
