@@ -1,8 +1,13 @@
 # Find Files Less than 10MB in Size
 mkdir -p /findings
 find /mydir -type f -size -10M -exec cp {} /findings/ \;
+find /mydir -type f -size -10M -exec cp {} /findings/ \; 2>&1 | tee -a /findings/findings.log
 # OR
 find /mydir -type f -size -10M -exec cp -t /findings/ {} +
+find /mydir -type f -size -10M -exec cp -t /findings/ {} + 2>&1 | tee -a /findings/findings.log
+
+find /mydir -type f -size -10M \
+  -exec sh -c 'cp "$1" /findings/ 2>&1 | tee -a /findings/findings.log' _ {} \;
 
 # Find Files More than 10MB in Size
 find /mydir -type f -size +10M -exec cp {} /findings/ \;
@@ -28,10 +33,15 @@ find /etc -type f \( -name "*.conf" -o -name "*.cfg" -o -name "*.service" \) >> 
 find /etc -type f \( -name "*.conf" -o -name "*.cfg" -o -name "*.service" \) | tee -a /findings/conf_list.txt
 find /etc -type f '(' -name "*.conf" -o -name "*.cfg" -o -name "*.service" ')' | tee -a /findings/conf_list.txt
 
+# Tests with AND / OR
+find / -name smb.conf -and -type f
+find / \( -name smb.conf -or -name nmb.conf \) -type f
 
 # Find and Delete Files
 find /mydir -type f -name "*.bak" -exec rm -f {} \;
 find /mydir -type f -name "*.bak" -exec rm -f {} +
+
+
 
 
 # Directory
