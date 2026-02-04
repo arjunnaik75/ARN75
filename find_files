@@ -45,6 +45,9 @@ find /mydir -type f -name "*.bak" -exec rm -f {} +
 
 
 # Directory
+find / -user anaik -type d > /findings/
+find / -uid 1006 > /findings/uid1006
+
 du -h --max-depth=1 /mydir | awk '$1 ~ /M/ && $1+0 > 100 {print $2}'
 du -h --max-depth=3 /mydir | awk '$1 ~ /M/ && $1+0 > 100 {print $2}'
 
