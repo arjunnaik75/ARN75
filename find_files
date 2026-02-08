@@ -24,18 +24,21 @@ find /mydir -type f -name "test.txt" -exec cp {} /findings/ \;
 find /mydir -type f -name "test.txt" -exec cp -t /findings/ {} +
 
 # Search for files ending with digits, print and append
-find /mydir -type f -regex '.*[0-9]$' | tee -a /findings/digit_file1 # File Paths
-find /mydir -type f -regex '.*/[0-9]$' | tee -a /findings/digit_file1 # Only File Names
+find /mydir -type f -regex '.*[0-9]$' | tee -a /findings/digit_file1 #Destination_File_Path ##Matches_Like #file0 #file1 #file3  
+find /mydir -type f -regex '.*/[0-9]$' | tee -a /findings/digit_file1 #Only_File_Names_Like #0 #1 #2
 
 # Find multiple patterns
-find /etc -type f \( -name "*.conf" -o -name "*.cfg" -o -name "*.service" \) >> /findings/conf_list.txt
+find /etc -type f \( -name "*.conf" -o -name "*.cfg" -o -name "*.service" \) > /findings/conf_list.txt
 # Append and also show on screen
 find /etc -type f \( -name "*.conf" -o -name "*.cfg" -o -name "*.service" \) | tee -a /findings/conf_list.txt
 find /etc -type f '(' -name "*.conf" -o -name "*.cfg" -o -name "*.service" ')' | tee -a /findings/conf_list.txt
+find /etc -type f -regex '.*\.\(conf\|cfg\|service\|ini\)$' | tee -a /findings/conf_list.txt
+find /etc -type f -regex '.*\.\(conf\|cfg\|service\|ini\)$' -exec cp -t /findings/ {} +
 
 # Tests with AND / OR
-find / -name smb.conf -and -type f
-find / \( -name smb.conf -or -name nmb.conf \) -type f
+find / -name smb.conf -a -type f
+find / \(-name smb.conf -o -name nmb.conf \) -type f
+find / '(' -name smb.conf -o -name nmb.conf ')' -type f
 
 # Find and Delete Files
 find /mydir -type f -name "*.bak" -exec rm -f {} \;
@@ -43,22 +46,29 @@ find /mydir -type f -name "*.bak" -exec rm -f {} +
 
 
 
-
 # Directory
 find / -user anaik -type d > /findings/
 find / -uid 1006 > /findings/uid1006
 
-du -h --max-depth=1 /mydir | awk '$1 ~ /M/ && $1+0 > 100 {print $2}'
+du -sm --max-depth=1 /mydir | awk '$1 > 100 {print $2}'
+du -h --max-depth=1 /mydir | awk '$1 ~ /M/ && $1+0 > 100 {print $2}' # ~ match regex
 du -h --max-depth=3 /mydir | awk '$1 ~ /M/ && $1+0 > 100 {print $2}'
 
+
 # Copying Directories Recursively
-for dir in $(sudo du -sm /mydir/* | awk '$1 > 100 {print $2}'); do
-    sudo cp -r "$dir" /findings/large_dirs/
+for dir in $(du -sm /mydir/* | awk '$1 > 100 {print $2}'); do
+    cp -r "$dir" /findings/large_dirs/
 done
 
-# Preserves permissions, symlinks, etc
-for dir in $(sudo du -sm /mydir/* | awk '$1 > 100 {print $2}'); do
-    sudo rsync -a "$dir" /findings/large_dirs/
+# OR
+for dir in $(du -sm /mydir/* | awk '$1 > 100 {print $2}') 
+do
+    cp -r "$dir" /findings/large_dirs/
+done
+
+# Preserves permissions, symlinks, etc #for backups, synchronization, or repeated transfers
+for dir in $(du -sm /mydir/* | awk '$1 > 100 {print $2}'); do
+    rsync -a "$dir" /findings/large_dirs/
 done
 
 
