@@ -5,9 +5,10 @@ hostname
 
 #How to set hostname / RHEL Server Name Simple
 #sudo hostnamectl set-hostname rhel.lab.local
-sudo hostnamectl set-hostname myserver.example.com
+hostnamectl hostname myserver.example.com
+#hostnamectl set-hostname myserver.example.com
 
-sudo hostnamectl set-hostname "Web Server 01" --pretty
+hostnamectl set-hostname "Web Server 01" --pretty
 
 #vi /etc/hostname
 #vi /etc/hosts
@@ -17,5 +18,5 @@ sudo hostnamectl set-hostname "Web Server 01" --pretty
 #HOSTNAME=myserver.example.com
 #myserver.example.com
 
-#sudo systemctl restart systemd-logind
+systemctl restart systemd-logind
 
