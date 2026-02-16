@@ -71,4 +71,10 @@ for dir in $(du -sm /mydir/* | awk '$1 > 100 {print $2}'); do
     rsync -a "$dir" /findings/large_dirs/
 done
 
+###########################################################################
+#Which command will find the word “error” in all .log files in a directory?
+grep -i "error" *.log
+grep -r "error" --include="*.log" /mydir
+find /mydir -name "*.log" -type f -exec grep -Hi "error" {} \;
+find /mydir -name "*.log" -type f -exec grep -Hi "error" {} +
 
