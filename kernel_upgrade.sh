@@ -48,6 +48,7 @@ echo "Kernel upgrade process complete. Please reboot and verify with 'uname -r'.
 #################################################################################
 ## Manual Troubleshooting #######################################################
 #uname -r
+#ls /boot/vmlinuz-*
 #rpm -q kernel
 #rpm -q kernel | sort -V
 #rpm -q kernel | sort -V | tail -1
@@ -56,7 +57,10 @@ echo "Kernel upgrade process complete. Please reboot and verify with 'uname -r'.
 #sudo grubby --default-index
 #sudo grubby --info=ALL
 
+#cp /boot/initramfs-$(uname -r).img /boot/initramfs-$(uname -r).img.bak
 #ls -lh /boot/initramfs-$(rpm -q --qf "%{VERSION}-%{RELEASE}.%{ARCH}" kernel | sort -V | tail -1).img
+#sudo lsinitrd /boot/initramfs-$(uname -r).img
+#zcat /boot/initramfs-$(uname -r).img | cpio -t
 #LATEST_KERNEL=$(rpm -q kernel | sort -V | tail -1)
 #KERNEL_VERSION=${LATEST_KERNEL#kernel-}
 #sudo dracut -f /boot/initramfs-${KERNEL_VERSION}.img ${KERNEL_VERSION}
