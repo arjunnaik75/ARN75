@@ -15,9 +15,9 @@ find /mydir -type f -size +10M -exec cp {} /findings/ \;
 find /mydir -type f -size +10M -exec cp -t /findings/ {} +
 
 # Find Files More than 10MB & Less than 50MB in Size
-find /mydir -type f -size +10M -size -10M -exec cp {} /findings/ \;
+find /mydir -type f -size +10M -size -50M -exec cp {} /findings/ \;
 # OR
-find /mydir -type f -size +10M -size -10M -exec cp -t /findings/ {} +
+find /mydir -type f -size +10M -size -50M -exec cp -t /findings/ {} +
 
 # By Name
 find /mydir -type f -name "test.txt" -exec cp {} /findings/ \;
