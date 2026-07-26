@@ -48,3 +48,21 @@ catch {
     Write-Error "Error deploying wallpaper: $_"
     exit 1
 }
+<#
+How to Deploy via GPO
+Save the script as Deploy-Wallpaper.ps1 in a shared folder accessible to all users (e.g., \\MyServer\GPO_Scripts).
+Open Group Policy Management (gpmc.msc).
+Create or edit a User Configuration GPO.
+Navigate to:
+User Configuration → Windows Settings → Scripts (Logon/Logoff) → Logon
+Click Add, then Browse, and select the PowerShell script.
+Ensure PowerShell script execution policy allows running scripts:
+In the same GPO, go to:
+Computer Configuration → Policies → Administrative Templates → Windows Components → Windows PowerShell → Turn on Script Execution → Enabled → Allow all scripts.
+Link the GPO to the desired OU.
+
+Advantages of this method
+Works without requiring manual user action.
+Wallpaper is stored locally, so it still works offline.
+Can be updated by replacing the file on the share.
+#>
