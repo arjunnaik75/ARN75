@@ -40,10 +40,15 @@ find / -name smb.conf -a -type f
 find / \(-name smb.conf -o -name nmb.conf \) -type f
 find / '(' -name smb.conf -o -name nmb.conf ')' -type f
 
+sudo find /var/log -type f -size +500M -exec ls -lh {} \;
+sudo find / -type f -size +100M -exec ls -lh {} \; 2>/dev/null | \
+    awk '{print $5, $9}' | sort -hr | head -n 10
+    
 # Find and Delete Files
 find /mydir -type f -name "*.bak" -exec rm -f {} \;
 find /mydir -type f -name "*.bak" -exec rm -f {} +
-
+# Find and Delete
+sudo find /var/log -type f -name "*.log" -size +1G -exec rm -i {} \;
 
 
 # Directory
